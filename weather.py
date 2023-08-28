@@ -8,8 +8,6 @@ core_weather = weather[["PRCP", "SNOW", "SNWD", "TMAX", "TMIN"]].copy()
 
 core_weather.columns = ["precip", "snow", "snow_depth", "temp_max", "temp_min"]
 
-core_weather
-
 core_weather.apply(pd.isnull).sum()/core_weather.shape[0]
 
 core_weather["snow"].value_counts()
@@ -28,8 +26,6 @@ core_weather.index
 
 core_weather.index = pd.to_datetime(core_weather.index)
 
-core_weather.index
-
 core_weather.index.month
 
 core_weather.apply(lambda x: (x==9999).sum())
@@ -44,11 +40,7 @@ core_weather.groupby(core_weather.index.year).sum()["precip"]
 
 core_weather["target"] = core_weather.shift(-1)["temp_max"]
 
-core_weather
-
 core_weather = core_weather.iloc[:-1,:].copy()
-
-core_weather
 
 from sklearn.linear_model import Ridge
 
@@ -72,8 +64,6 @@ combined = pd.concat([test["target"], pd.Series(predictions, index=test.index)],
 
 combined.columns = ["actual", "predictions"]
 
-combined
-
 combined.plot()
 
 reg.coef_
@@ -90,8 +80,6 @@ def create_predictions(predictors, core_weather, reg):
     
 core_weather["month_max"] = core_weather["temp_max"].rolling(30).mean()
 
-core_weather
-
 core_weather["month_day_max"] = core_weather["month_max"] / core_weather["temp_max"]
 
 core_weather["max_min"] = core_weather["temp_max"] / core_weather["temp_min"]
@@ -107,8 +95,6 @@ error
 combined.plot()
 
 core_weather["monthly_avg"] = core_weather["temp_max"].groupby(core_weather.index.month, group_keys=False).apply(lambda x: x.expanding(1).mean())
-
-core_weather
 
 core_weather["day_of_year_avg"] = core_weather["temp_max"].groupby(core_weather.index.day_of_year, group_keys=False).apply(lambda x: x.expanding(1).mean())
 
